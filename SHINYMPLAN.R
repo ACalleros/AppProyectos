@@ -7,7 +7,8 @@ library(fuzzyjoin)
 distritos <- st_read('distritos.gpkg') %>% 
   #mutate_if(is.character, iconv) %>% 
   st_transform(., 4326) %>% 
-  st_zm(drop = T)
+  st_zm(drop = T) %>% 
+  fuzzy_full_join(distritos, proyectos, match_fun = str_detect)
 centros <- st_centroid(distritos)
 proyectos <- openxlsx::read.xlsx('~/PMDU/PROYECTOS_FINAL.xlsx') %>% 
   fill(everything()) %>% 
@@ -75,11 +76,11 @@ server <- function(input, output) {
     
   #TABLA ----
   output$tabla <-  if(input$subsistema !='Todos') {
-      renderDataTable(proyectos %>% 
-                        #st_drop_geometry() %>% 
+      renderDataTable(distritos % >% 
+                        st_drop_geometry() %>% 
                         as.data.frame() %>% 
                         filter(SUBSISTEMA == input$subsistema) %>% 
-                        select(nombre, NOMBRE.PROYECTO, DESCRIPCIÓN.GENERAL),
+                        #select(nombre, NOMBRE.PROYECTO, DESCRIPCIÓN.GENERAL),
                       options = list(
                         deferRender = TRUE,
                         scrollY = 200,
@@ -87,9 +88,10 @@ server <- function(input, output) {
       
   }
     else{
-      renderDataTable(proyectos %>% 
+      renderDataTable(distritos %>% 
+                        st_drop_geometry() %>% 
                         as.data.frame() %>% 
-                        select(nombre, NOMBRE.PROYECTO, DESCRIPCIÓN.GENERAL),
+                        #select(nombre, NOMBRE.PROYECTO, DESCRIPCIÓN.GENERAL),
                       options = list(
                         deferRender = TRUE,
                         scrollY = 200,
