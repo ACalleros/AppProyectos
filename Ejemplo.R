@@ -81,7 +81,7 @@ server <- function(input,output){
     dataTableProxy("table01") %>%
       selectRows(which(qDat %>% 
                          st_drop_geometry() %>% 
-                         as.data.frame() %>% View$id == clickId)) %>%
+                         as.data.frame(), View$id == clickId)) %>%
       selectPage(which(input$table01_rows_all == clickId) %/% input$table01_state$length + 1)
   })
 }
