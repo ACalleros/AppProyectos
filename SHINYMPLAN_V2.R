@@ -35,7 +35,6 @@ server <- function(input,output){
   })
   # to keep track of previously selected row
   prev_row <- reactiveVal()
-  
 
   observeEvent(input$tabla_rows_selected, {
     row_selected = qSub()[input$tabla_rows_selected,]
@@ -43,9 +42,13 @@ server <- function(input,output){
     print(row_selected)
     proxy %>%
       addPolygons(data = distritos[input$tabla_rows_selected,],
-                  color = 'red') 
+                  color = 'red',
+                  layerId = as.character(prev_row()$id)) 
     if(!is.null(prev_row()))
     {
+      proxy %>%
+        addMarkers(data = prev_row() %>% 
+                   layerId = as.character(prev_row()$id))
 
     }
     prev_row(row_selected)

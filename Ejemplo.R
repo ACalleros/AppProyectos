@@ -5,7 +5,7 @@ library(plotly)
 library(leaflet)
 library(DT)
 
-qDat <- distritos
+qDat <-  distritos
 qDat$id <- seq.int(nrow(qDat))
 str(qDat)
 
@@ -20,11 +20,11 @@ ui <- fluidPage(
   mainPanel(
     leafletOutput('map01'),
     dataTableOutput('table01'))
-  )
+)
 
 server <- function(input,output){
   qSub <- st_drop_geometry(qDat)
-    # table
+  # table
   output$table01 <- renderDataTable({
     DT::datatable(qSub, selection = "single",options=list(stateSave = TRUE))
   })
@@ -50,15 +50,15 @@ server <- function(input,output){
                    lat=prev_row()$lat)
     }
     
-   
+    
   })
   
   # map
   output$map01 <- renderLeaflet({
-      qMap <- leaflet() %>% 
-        addTiles() %>%
-        addPolygons(data = distritos,
-                    layerId = ~id)
+    qMap <- leaflet() %>% 
+      addTiles() %>%
+      addPolygons(data = distritos,
+                  layerId = ~id)
     qMap
   })
   
@@ -68,7 +68,7 @@ server <- function(input,output){
     clickId <- input$map01_shape_click$id
     dataTableProxy("table01") %>% 
       selectRows(qSub[which(qSub$id_dto.x == clickId),]) 
-      #selectPage(qSub[which(input$table01_rows_all == clickId),] %/% input$table01_state$length + 1)
+    #selectPage(qSub[which(input$table01_rows_all == clickId),] %/% input$table01_state$length + 1)
   })
 }
 

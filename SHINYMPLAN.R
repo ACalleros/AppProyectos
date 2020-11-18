@@ -8,7 +8,8 @@ distritos <- st_read('distritos.gpkg') %>%
   #mutate_if(is.character, iconv) %>% 
   st_transform(., 4326) %>% 
   st_zm(drop = T) %>% 
-  fuzzy_full_join(distritos, proyectos, match_fun = str_detect)
+  fuzzy_full_join(., proyectos, match_fun = str_detect) %>% 
+  st_as_sf()
 centros <- st_centroid(distritos)
 proyectos <- openxlsx::read.xlsx('~/PMDU/PROYECTOS_FINAL.xlsx') %>% 
   fill(everything()) %>% 
