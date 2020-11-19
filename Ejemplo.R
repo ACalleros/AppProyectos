@@ -39,19 +39,7 @@ server <- function(input,output){
     proxy %>%
       addPolygons(data = distritos[input$table01_rows_selected,], 
                   color = 'red')
-    
-    if(!is.null(prev_row()))
-    {
-      
-      proxy %>%
-        addMarkers(popup=as.character(prev_row()$mag), 
-                   layerId = as.character(prev_row()$id),
-                   lng=prev_row()$long, 
-                   lat=prev_row()$lat)
-    }
-    
-    
-  })
+    })
   
   # map
   output$map01 <- renderLeaflet({
@@ -64,7 +52,7 @@ server <- function(input,output){
   
   observeEvent(input$map01_shape_click, {
     print(input$table01)
-    #print(input$map01_shape_click)
+    print(input$map01_shape_click)
     clickId <- input$map01_shape_click$id
     dataTableProxy("table01") %>% 
       selectRows(qSub[which(qSub$id_dto.x == clickId),]) 
